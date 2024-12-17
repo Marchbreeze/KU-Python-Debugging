@@ -31,16 +31,6 @@ class Dependencies(StackInspector):
             self.data.setdefault(var, set())
         self.validate()
 
-    def validate(self) -> None:
-        assert isinstance(self.data, dict)
-        assert isinstance(self.control, dict)
-        for node in (self.data.keys()) | set(self.control.keys()):
-            var_name, location = node
-            assert isinstance(var_name, str)
-            func, lineno = location
-            assert callable(func)
-            assert isinstance(lineno, int)
-
     def _source(self, node: Node) -> str:
         (name, location) = node
         func, lineno = location
@@ -345,7 +335,14 @@ class Dependencies(StackInspector):
             n += 1
 
     def validate(self) -> None:
-        super().validate()
+        assert isinstance(self.data, dict)
+        assert isinstance(self.control, dict)
+        for node in (self.data.keys()) | set(self.control.keys()):
+            var_name, location = node
+            assert isinstance(var_name, str)
+            func, lineno = location
+            assert callable(func)
+            assert isinstance(lineno, int)
         for var in self.all_vars():
             source = self.source(var)
             if not source:

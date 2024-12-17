@@ -1,21 +1,19 @@
 from types import FrameType, TracebackType, FunctionType
 from typing import Any, Dict, List, Set, Optional, Union, Tuple, Type, Callable, cast
-import sys
 import inspect
-import warnings
-import copy
-from ast import AST
 import itertools
 from DataTracker import DataTracker
 from StackInspector import StackInspector
 from Dependencies import Dependencies
 
-TEST = '<test>'
 Location = Tuple[Callable, int]
 Node = Tuple[str, Location]
 Dependency = Dict[Node, Set[Node]]
 
 class DependencyTracker(DataTracker):
+    
+    TEST = '<test>'
+    
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
 

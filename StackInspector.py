@@ -62,6 +62,9 @@ class StackInspector:
             return func
         return self.create_function(frame)
 
+    def caller_globals(self) -> Dict[str, Any]:
+        return self.caller_frame().f_globals
+
     def unknown(self) -> None:
         pass
 
