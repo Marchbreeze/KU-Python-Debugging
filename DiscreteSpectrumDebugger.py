@@ -36,13 +36,3 @@ class DiscreteSpectrumDebugger(SpectrumDebugger):
             return "only in passing runs"
         else:
             return "never"
-
-# d = DiscreteSpectrumDebugger()
-# with d:
-#     remove_html_markup('abc')
-# with d:
-#     remove_html_markup('<b>abc</b>')
-# with d:
-#     remove_html_markup('"abc"')
-#     assert False  
-# print(d)
