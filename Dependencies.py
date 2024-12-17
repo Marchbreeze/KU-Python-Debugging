@@ -4,6 +4,7 @@ import sys
 import inspect
 import warnings
 from graphviz import Digraph
+import re
 import html
 from StackInspector import StackInspector
 
@@ -342,3 +343,29 @@ class Dependencies(StackInspector):
             print(line.rstrip(), '.py')
             print()
             n += 1
+
+    def validate(self) -> None:
+        super().validate()
+        for var in self.all_vars():
+            source = self.source(var)
+            if not source:
+                continue
+            if source.startswith('<'):
+                continue
+            for dep_var in self.data[var] | self.control[var]:
+                dep_name, dep_location = dep_var
+                if dep_name.endswith(' value>'):
+                    if source.find('(') < 0:
+                        warnings.warn(f"Warning: {self.format_var(var)} "
+                                    f"depends on {self.format_var(dep_var)}, "
+                                    f"but {repr(source)} does not "
+                                    f"seem to have a call")
+                    continue
+                if source.startswith('def'):
+                    continue  
+                rx = re.compile(r'\b' + dep_name + r'\b')
+                if rx.search(source) is None:
+                    warnings.warn(f"{self.format_var(var)} "
+                                f"depends on {self.format_var(dep_var)}, "
+                                f"but {repr(dep_name)} does not occur "
+                                f"in {repr(source)}")
